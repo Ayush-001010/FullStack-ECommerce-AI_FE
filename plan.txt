@@ -1,0 +1,284 @@
+# 1-Month Build Plan (30 Days)
+## Project: AI-Powered Single-Vendor E-Commerce + Shopping Assistant
+**Date:** 2026-03-11  
+**Developer:** Ayush-001010  
+**Daily time:** 2–3 hours  
+**Goal:** Ship a deployable, portfolio-grade end-to-end app (React + Node + SQL + Python GenAI) with advanced features (Elasticsearch, CDN, caching) and LinkedIn-ready milestones.
+
+---
+
+## 0) Rules to Finish On Time
+1. **Ship weekly** (end of each week = demo video + GitHub updates).
+2. **MVP first** (don’t add Elasticsearch/CDN/AI until core commerce works).
+3. **Keep scope single-vendor** (no sellers/marketplace).
+4. **Every feature must be demo-able** (UI + API + data).
+5. **Use phases**: V0 (MVP) → V1 (Search/CDN) → V2 (AI Assistant) → polish/deploy.
+
+---
+
+## 1) High-Level Architecture (Target)
+### Services
+- **Frontend:** React (Vite)
+- **Backend API:** Node.js (Express or NestJS)
+- **Database:** PostgreSQL (recommended)
+- **Search:** Elasticsearch
+- **Cache / Jobs (optional but strong):** Redis + BullMQ (or similar)
+- **AI Service:** Python FastAPI (RAG + tool calling)
+- **Images:** Object storage (S3/Cloudflare R2) + CDN
+
+### Key integrations (portfolio-grade)
+- Elasticsearch for product search + filters + autocomplete
+- CDN for product images
+- AI assistant that recommends products from your own catalog (RAG), and can add to cart (tool calling)
+
+---
+
+## 2) Milestones (What you will post on LinkedIn)
+### Milestone 1 (End of Week 1)
+- Working full-stack foundation + auth + catalog + cart (basic)
+
+### Milestone 2 (End of Week 2)
+- Checkout + orders + admin product CRUD (end-to-end purchase flow)
+
+### Milestone 3 (End of Week 3)
+- Elasticsearch search + CDN-hosted images (+ optional Redis caching)
+
+### Milestone 4 (End of Week 4)
+- AI shopping assistant (Python) + deployed demo + final documentation
+
+---
+
+## 3) Detailed Day-by-Day Plan (30 Days)
+
+> Each day is designed for ~2–3 hours.  
+> If you have extra time, use it for polishing UI + tests.
+
+---
+
+### Week 1 (Days 1–7): Foundation + Auth + Catalog + Cart
+**Goal:** App runs locally, DB connected, auth works, user can browse and manage cart.
+
+**Day 1 — Repo + base setup**
+- Create GitHub repo
+- Setup frontend (React + Vite)
+- Setup backend (Node + Express/Nest skeleton)
+- Setup monorepo structure (recommended)
+- Add basic README “how to run”
+
+**Day 2 — DB + migrations + seed**
+- Setup PostgreSQL (Docker Compose)
+- Tables: users, products, product_images, carts, cart_items
+- Seed script (10–20 products)
+
+**Day 3 — Auth backend**
+- Signup/login endpoints
+- Password hashing (bcrypt)
+- JWT or cookie-session
+- Basic validation
+
+**Day 4 — Auth frontend**
+- Login + signup pages
+- Store token/session
+- Protected routes skeleton
+
+**Day 5 — Catalog APIs + UI**
+- API: GET /products (pagination)
+- API: GET /products/:id
+- UI: Product list + Product detail
+
+**Day 6 — Cart**
+- API: add/update/remove cart items
+- UI: Cart page
+- Persist cart for logged-in users
+
+**Day 7 — Week 1 demo + cleanup**
+- Fix bugs
+- Improve README with setup steps
+- Record a short demo video (30–60s)
+
+**LinkedIn Post #1 idea:** “Week 1: React + Node + Postgres foundation + Auth + Catalog + Cart”
+
+---
+
+### Week 2 (Days 8–14): Checkout + Orders + Admin Panel
+**Goal:** Complete commerce flow + admin can manage products.
+
+**Day 8 — Orders schema**
+- Tables: orders, order_items
+- Status fields (PLACED, SHIPPED, DELIVERED) (optional)
+
+**Day 9 — Checkout**
+- Checkout UI form (shipping address)
+- API: POST /checkout → creates order (mock payment)
+
+**Day 10 — Order history**
+- API: GET /orders, GET /orders/:id
+- UI: My Orders + Order detail page
+
+**Day 11 — Admin auth + RBAC**
+- Add ADMIN role
+- Middleware/guards for admin routes
+
+**Day 12 — Admin Product CRUD**
+- Admin UI: add/edit/delete product
+- API: POST/PUT/DELETE /admin/products
+
+**Day 13 — Product image upload (basic first)**
+- Upload endpoint
+- Store locally or directly to object storage (depending on readiness)
+- Show images in product detail
+
+**Day 14 — Stabilize + basic tests**
+- Fix edge cases (empty cart, invalid qty, etc.)
+- Add basic API tests (auth + order creation)
+
+**LinkedIn Post #2 idea:** “Week 2: Checkout + Orders + Admin Dashboard (end-to-end flow done)”
+
+---
+
+### Week 3 (Days 15–21): Elasticsearch + CDN + Performance
+**Goal:** Upgrade to “production-like” search and image delivery.
+
+**Day 15 — Add Elasticsearch**
+- Add Elasticsearch to docker-compose
+- Define index mapping for products
+
+**Day 16 — Indexing**
+- Write indexer script (initial full index)
+- On product create/update: update index (sync or via job)
+
+**Day 17 — Search API**
+- Endpoint: GET /search?q=&filters=&sort=&page=
+- Filters: category, price range, availability
+- Sorting: relevance, price low/high, newest
+
+**Day 18 — Search UI**
+- Search bar
+- Filters UI
+- Results page with pagination
+
+**Day 19 — CDN images**
+- Move product images to S3 or Cloudflare R2
+- Serve via CDN URL
+- Add cache-control headers
+
+**Day 20 — Redis caching (optional but recommended)**
+- Cache product list/details
+- Invalidate cache on admin update
+
+**Day 21 — Week 3 demo + docs**
+- Demo: fast search + CDN images
+- Add architecture section to README
+
+**LinkedIn Post #3 idea:** “Week 3: Elasticsearch search + CDN images + caching”
+
+---
+
+### Week 4 (Days 22–30): AI Assistant + Deploy + Polish
+**Goal:** Differentiator feature (AI assistant) + deploy + portfolio polish.
+
+**Day 22 — AI service skeleton**
+- Setup Python FastAPI service
+- Basic /health endpoint
+- Define chat request/response format
+
+**Day 23 — Product RAG foundation**
+- Create embeddings for products (title + description + specs)
+- Vector store choice:
+  - Option A: pgvector (Postgres)
+  - Option B: lightweight store (if speed is priority)
+- Retrieval: top-k products for query
+
+**Day 24 — Tool calling**
+- AI can call tools (real APIs):
+  - searchProducts(query, filters)
+  - getProductDetails(productId)
+  - addToCart(productId, qty)
+  - compareProducts(productIds)
+- Ensure catalog-only responses (anti-hallucination)
+
+**Day 25 — Chat UI**
+- Add chat widget to frontend
+- Show assistant messages
+- Render product cards in chat responses
+
+**Day 26 — Improve assistant UX**
+- Ask clarifying questions (budget, preference, use-case)
+- Better recommendation explanation (“why this product”)
+
+**Day 27 — Deploy**
+- Frontend: Vercel/Netlify
+- Node API: Render/Fly.io
+- Python AI: Render/Fly.io
+- DB: hosted Postgres (Neon/Supabase/Render)
+- Configure env vars safely
+
+**Day 28 — Security + observability**
+- Rate limiting on auth + chat
+- Request IDs, structured logs
+- Basic error tracking strategy (even if just logs)
+
+**Day 29 — Final polish**
+- Seed demo catalog + demo credentials
+- Fix UI bugs
+- Add screenshots / short GIFs
+
+**Day 30 — Final demo + LinkedIn**
+- Record final 2–3 minute video
+- Final README: architecture, setup, endpoints, AI flow
+- Write final LinkedIn post
+
+**LinkedIn Post #4 idea:** “Week 4: AI shopping assistant + deployed demo (full system)”
+
+---
+
+## 4) Minimum API Contract (Suggested)
+### Core (Node)
+- POST /auth/signup
+- POST /auth/login
+- GET /products
+- GET /products/:id
+- POST /cart/items
+- PATCH /cart/items/:id
+- DELETE /cart/items/:id
+- POST /checkout
+- GET /orders
+- GET /orders/:id
+
+### Admin (Node)
+- POST /admin/products
+- PUT /admin/products/:id
+- DELETE /admin/products/:id
+- POST /admin/products/:id/images
+
+### Search (Node + Elasticsearch)
+- GET /search?q=&category=&minPrice=&maxPrice=&sort=&page=
+
+### AI (Python)
+- POST /chat
+  - input: user message + optional user/cart context
+  - output: assistant message + recommended products + actions
+
+---
+
+## 5) Definition of Done (DoD)
+A feature is “done” only if:
+- API works + UI uses it
+- Error handling exists (basic)
+- Data persists correctly
+- You can demo it in < 60 seconds
+- README has at least 2–3 lines about it (what + how to run)
+
+---
+
+## 6) Next Info Needed (to tailor the plan)
+Reply with your choices:
+1) **TypeScript or JavaScript** (frontend + backend)?
+2) Database: **PostgreSQL** or MySQL?
+3) Images: **Cloudflare R2** or **AWS S3**?
+4) Vector store for RAG: **pgvector** or something else?
+
+Once you answer, I’ll generate:
+- a recommended **folder structure**
+- a **DB schema SQL**
+- and a **week-by-week task board (checklist)** you can paste into GitHub Projects.
