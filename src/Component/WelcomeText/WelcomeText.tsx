@@ -8,7 +8,7 @@ const WelcomeText: React.FC<IWelcomeText> = ({ text }) => {
   const AnimatedText = ({
     value,
     startDelay = 0,
-    charStagger = 0.04,
+    charStagger = 0.05, // slower
   }: {
     value: string;
     startDelay?: number;
@@ -19,7 +19,9 @@ const WelcomeText: React.FC<IWelcomeText> = ({ text }) => {
       animate="show"
       variants={{
         hidden: {},
-        show: { transition: { delayChildren: startDelay, staggerChildren: charStagger } },
+        show: {
+          transition: { delayChildren: startDelay, staggerChildren: charStagger },
+        },
       }}
       aria-label={value}
     >
@@ -33,7 +35,7 @@ const WelcomeText: React.FC<IWelcomeText> = ({ text }) => {
               opacity: 1,
               y: 0,
               filter: "blur(0px)",
-              transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+              transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }, // smoother per char
             },
           }}
         >
@@ -47,7 +49,11 @@ const WelcomeText: React.FC<IWelcomeText> = ({ text }) => {
     <motion.div initial="hidden" animate="show">
       <div className="my-2">
         <p className="text-4xl text-[#012a4a] font-extrabold tracking-tight drop-shadow-sm">
-          <AnimatedText value={AuthConfig.title} startDelay={0.05} charStagger={0.02} />
+          <AnimatedText
+            value={AuthConfig.title}
+            startDelay={0.1}
+            charStagger={0.05} // slower title
+          />
         </p>
 
         <motion.p
@@ -56,14 +62,14 @@ const WelcomeText: React.FC<IWelcomeText> = ({ text }) => {
             opacity: 1,
             y: 0,
             filter: "blur(0px)",
-            transition: { delay: 1.0, duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+            transition: { delay: 1.4, duration: 0.5, ease: [0.16, 1, 0.3, 1] }, // later + slower
           }}
           className="my-3 text-sm mx-1 text-[#2c7da0] leading-relaxed drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]"
         >
           <AnimatedText
             value={AuthConfig.sub_description[text]}
-            startDelay={1.05}
-            charStagger={0.012}
+            startDelay={1.45}
+            charStagger={0.02} // slower paragraph
           />
         </motion.p>
       </div>
@@ -78,8 +84,8 @@ const WelcomeText: React.FC<IWelcomeText> = ({ text }) => {
               y: 0,
               filter: "blur(0px)",
               transition: {
-                delay: 1.6 + index * 0.18,
-                duration: 0.35,
+                delay: 2.3 + index * 0.25, // slower cascade
+                duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               },
             }}
@@ -112,14 +118,13 @@ const WelcomeText: React.FC<IWelcomeText> = ({ text }) => {
               y: 0,
               filter: "blur(0px)",
               transition: {
-                delay: 2.6 + index * 0.12,
-                duration: 0.3,
+                delay: 3.8 + index * 0.18, // slower
+                duration: 0.45,
                 ease: [0.16, 1, 0.3, 1],
               },
             }}
             className="p-6"
           >
-            {/* <p><span><i className={contact.icon} /></span></p> */}
             <p className="text-xs font-medium text-[#012a4a]/70 hover:text-[#012a4a] transition-colors cursor-pointer">
               {contact.name}
             </p>

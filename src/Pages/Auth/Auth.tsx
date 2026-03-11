@@ -1,6 +1,7 @@
 import React from "react";
 import type IAuth from "./IAuth";
 import WelcomeText from "../../Component/WelcomeText/WelcomeText";
+import AuthForm from "../../Component/AuthForm/AuthForm";
 
 const Auth: React.FC<IAuth> = () => {
   return (
@@ -8,7 +9,9 @@ const Auth: React.FC<IAuth> = () => {
       <div className="w-1/2">
         <WelcomeText text="signUp" />
       </div>
-      <div className="w-1/2">{/* Sign In Form */}</div>
+      <div className="w-1/2">
+        <AuthForm type={"signUp"} />
+      </div>
     </div>
   );
 };
