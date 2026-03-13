@@ -8,8 +8,14 @@ const initialState : UserDetailsInterface = {
 const UserDetailsSlice  = createSlice({
     name: "UserDetails",
     initialState,
-    reducers: {}
+    reducers: {
+        setSignedIn : (state, action) => {
+            state.isSignedIn = true;
+            state.name = action.payload.name;
+            state.email = action.payload.email;
+        },
+    }
 });
 
-export const {} = UserDetailsSlice.actions;
+export const { setSignedIn } = UserDetailsSlice.actions;
 export default UserDetailsSlice.reducer;

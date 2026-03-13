@@ -3,17 +3,17 @@ import type IAuthForm from "./IAuthForm";
 import { Button, Input, message } from "antd";
 import { Formik, type FormikProps } from "formik";
 import * as yup from "yup";
-import {
-  GithubOutlined,
-  GoogleOutlined,
-  LinkedinOutlined,
-  UserOutlined,
-  MailOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
+import { GithubOutlined,GoogleOutlined,LinkedinOutlined,UserOutlined,MailOutlined,LockOutlined } from "@ant-design/icons";
+import { useGoogleLogin } from "@react-oauth/google";
+import APICallingServices from "../../Services/APICallingServices";
+import { useDispatch } from "react-redux";
+import { setSignedIn } from "../../Redux/Slice/UserDetails";
+import  { useNavigate } from "react-router-dom";
 
-const AuthForm: React.FC<IAuthForm> = ({ type }) => {
+const AuthForm: React.FC<IAuthForm> = ({ type , changeType , submitHandler }) => {
   const [messageAPI , contextHandler] = message.useMessage();
+  const dispatch = useDispatch();
+  const  navigate = useNavigate();
   const { initialValues, validationSchema } = useMemo(() => {
     let initialValues: Record<string, string> = {};
     let validationSchema: Record<string, any> = {
@@ -55,6 +55,7 @@ const AuthForm: React.FC<IAuthForm> = ({ type }) => {
   ) => {
     formik.setFieldValue(backendName, e.target.value);
     formik.setFieldTouched(backendName, true);
+    formik.validateField(backendName);
   };
   const blurHandler = (
     backendName: string,
@@ -65,7 +66,27 @@ const AuthForm: React.FC<IAuthForm> = ({ type }) => {
   const serviceUnavailableHandler = () => {
     messageAPI.destroy();
     messageAPI.error("This service is currently unavailable. Please try again later.");
-  }
+  };
+  const googleLogin = useGoogleLogin({
+    onSuccess : async (res) => {
+      if(res.code){
+        const response = await APICallingServices.postRequest("/auth/googleAuth", { code: res.code });
+        if(response.success) {
+          messageAPI.success("Google login successful! Redirecting...");
+          // You can dispatch the user details to Redux here if needed
+          dispatch(setSignedIn({ name: response.data.name, email: response.data.email }));
+          navigate("/");
+        } else {
+          messageAPI.error("Google login failed! Please try again.");
+        }
+      }
+    },
+    onError : () => {
+      messageAPI.destroy();
+      messageAPI.error("Google login failed! Please try again.");
+    },
+    flow:"auth-code"
+  });
 
   return (
     <div className="m-5 rounded-2xl bg-white/80 p-6 shadow-[0_12px_30px_rgba(1,42,74,0.10)] ring-1 ring-gray-200 backdrop-blur-sm flex flex-col">
@@ -79,7 +100,7 @@ const AuthForm: React.FC<IAuthForm> = ({ type }) => {
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className="w-full">
-            <Button className="w-full !rounded-xl !border-gray-200 !bg-white !text-[#012a4a] !shadow-sm hover:!bg-[#012a4a] hover:!border-[#2c7da0]/40 hover:!text-[#fff]" onClick={serviceUnavailableHandler}>
+            <Button onClick={googleLogin} className="w-full !rounded-xl !border-gray-200 !bg-white !text-[#012a4a] !shadow-sm hover:!bg-[#012a4a] hover:!border-[#2c7da0]/40 hover:!text-[#fff]">
               <span className="flex items-center justify-center gap-2">
                 <GoogleOutlined className="text-lg text-[#2c7da0]" />
                 <p className="font-medium">Google</p>
@@ -118,7 +139,7 @@ const AuthForm: React.FC<IAuthForm> = ({ type }) => {
       <div className="space-y-5 flex-1 flex flex-col">
         <Formik
           initialValues={initialValues}
-          onSubmit={() => {}}
+          onSubmit={submitHandler}
           validationSchema={yup.object(validationSchema)}
         >
           {(formik) => (
@@ -240,7 +261,7 @@ const AuthForm: React.FC<IAuthForm> = ({ type }) => {
         </Formik>
 
         <div className="pt-2">
-          <p className="text-center text-sm text-[#012a4a]/70">
+          <p className="text-center text-sm text-[#012a4a]/70" onClick={changeType}>
             {type === "signUp"
               ? "Already have an account?"
               : "Don't have an account?"}{" "}
