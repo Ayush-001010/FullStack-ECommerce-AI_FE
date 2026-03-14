@@ -16,7 +16,7 @@ const App: React.FC = () => {
 
   const checkUserIsSignedInOrNot = async () => {
     const res = await APICallingServices.postRequest("/auth/check",{});
-    console.log(res);
+    // console.log(res);
     if(res.success){
       dispatch(setSignedIn({
         name: res.data.name,

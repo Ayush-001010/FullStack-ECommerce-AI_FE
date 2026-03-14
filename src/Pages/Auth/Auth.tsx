@@ -20,10 +20,8 @@ const Auth: React.FC<IAuth> = () => {
     setType((prev) => (prev === "signIn" ? "signUp" : "signIn"));
   }
   const submitHandler = async (values: Record<string, string>) => {
-    console.log("Values submitted: ", values);
     if(type === "signIn") {
       const response = await APICallingServices.postRequest("/auth/signin", values);
-      console.log("Response from server: ", response);
       if(response.success) {
         messageAPI.success("Sign in successful! Redirecting...");
         dispatch(setSignedIn({ name: response.data.name, email: response.data.email }));
@@ -37,7 +35,6 @@ const Auth: React.FC<IAuth> = () => {
       setType("signIn");
     }
   }
-  console.log("Client_ID from env: ", VITE_CLIENT_ID);
 
   return (
     <div className="flex m-10 p-5">

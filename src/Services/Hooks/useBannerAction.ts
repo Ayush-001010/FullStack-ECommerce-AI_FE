@@ -11,7 +11,6 @@ const useBannerAction = () => {
 
     useEffect(() => {
         getBannerDetails().then((response) => {
-            console.log("Banner Response", response);
             const data : Array<IBannerInterface> = [];
             for(const value in response.data){
                 data.push({

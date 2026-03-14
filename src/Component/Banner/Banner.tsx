@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 
 const Banner: React.FC<IBanner> = () => {
   const { bannerImages } = useBannerAction();
-  console.log("Banner Images", bannerImages);
 
   return (
     <div className="w-full mt-4">
@@ -19,7 +18,7 @@ const Banner: React.FC<IBanner> = () => {
         loop
         navigation
         pagination={{ clickable: true }}
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        autoplay={{ delay: 10000, disableOnInteraction: false }}
       >
         {bannerImages.map((banner, idx) => (
           <SwiperSlide key={`${banner.RouteURL}-${idx}`}>
@@ -33,7 +32,7 @@ const Banner: React.FC<IBanner> = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
 
-              <div className="absolute inset-0 flex items-center">
+              <div className="absolute inset-0 flex  items-end justify-start my-6 mx-2 w-full">
                 <div className="mx-auto w-full max-w-6xl px-4">
                   <Link
                     to={banner.RouteURL}
