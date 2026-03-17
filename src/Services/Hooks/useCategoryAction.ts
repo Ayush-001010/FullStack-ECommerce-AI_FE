@@ -6,11 +6,10 @@ const useCategoryAction = () => {
   const [categories, setCategories] = useState<Array<CategoryInterface>>([]);
 
   const getCategories = async (pageNo:number = 1) => {
-    console.log("Fetching categories for page:", pageNo);
+    // console.log("Fetching categories for page:", pageNo);
     const res = await APICallingServices.postRequest("/ecom/getCategories", {
       pageNo,
     });
-    console.log(res.data);
     if (res.success) {
       const data: Array<CategoryInterface> = [];
       for (const category of res.data) {

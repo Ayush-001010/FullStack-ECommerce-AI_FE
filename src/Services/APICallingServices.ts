@@ -12,4 +12,13 @@ export default class APICallingServices {
       throw error;
     }
   };
+  static readonly getRequest = async (controllerName: string) => {
+    try {
+      const response = await this.api.get(controllerName);
+      return response.data;
+    } catch (error) {
+      console.error("Error in GET request:", error);
+      throw error;
+    }
+  };
 }

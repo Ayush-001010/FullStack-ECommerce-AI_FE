@@ -3,6 +3,7 @@ import type IHome from './IHome'
 import Navbar from '../../Component/Navbar/Navbar';
 import Banner from '../../Component/Banner/Banner';
 import Category from '../../Component/Category/Category';
+import ProductItems from '../../Component/ProductItems/ProductItems';
 
 const Home : React.FC<IHome> = () => {
     return (
@@ -10,6 +11,7 @@ const Home : React.FC<IHome> = () => {
             <Navbar />
             <Banner/>
             <Category/>
+            <ProductItems/>
         </div>
     )
 };
