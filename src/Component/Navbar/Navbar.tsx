@@ -2,7 +2,7 @@ import React from "react";
 import type INavbar from "./INavbar";
 import NavConfig from "../../Config/NavConfig";
 import { Link } from "react-router-dom";
-import { Button, Input, Select } from "antd";
+import SearchBar from "./SearchBar/SearchBar";
 
 const Navbar: React.FC<INavbar> = () => {
   return (
@@ -15,24 +15,7 @@ const Navbar: React.FC<INavbar> = () => {
           <p>{NavConfig.title}</p>
         </Link>
       </div>
-      <div className="flex items-center w-xl shadow-sm">
-        <Select
-          className="!rounded-none !bg-[#dee2e6] w-20 h-10 !text-[#212529]"
-          options={[{ label: "All", value: "All" }]}
-          value={"All"}
-        />
-        <Input
-          className="!rounded-none h-10 !text-[#6c757d] font-medium"
-          placeholder="Search Anything..."
-        />
-        <Button className="!rounded-none !h-10 !bg-[#dbb42c] !border-none">
-          <p>
-            <span>
-              <i className="bi bi-search text-lg font-semibold text-[#212529]" />
-            </span>
-          </p>
-        </Button>
-      </div>
+      <SearchBar />
       <div className="w-lg flex justify-end items-center gap-4">
         <div>
           <p className="flex items-center bg-[#dee2e6] px-2 py-1 rounded-full text-[#212529] font-medium shadow-sm">

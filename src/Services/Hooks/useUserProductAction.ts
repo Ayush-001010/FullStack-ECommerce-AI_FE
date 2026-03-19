@@ -19,8 +19,13 @@ const useUserProductAction = () => {
         const response = await APICallingServices.getRequest("/product/getFavorites?email=" + email);
         return response.data;
     }
+    const searchProducts = async (query : string) => {
+        const response = await APICallingServices.postRequest("/product/searchProduct",{searchText : query});
+        console.log(response);
+        return response.data || [];
+    }
 
-    return { addFavorite , getFavorites , deleteFavorite};
+    return { addFavorite , getFavorites , deleteFavorite , searchProducts};
 };
 
 export default useUserProductAction;
