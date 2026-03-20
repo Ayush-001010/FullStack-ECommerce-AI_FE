@@ -10,6 +10,7 @@ import  Home from "./Pages/Home/Home";
 import useUserProductAction from "./Services/Hooks/useUserProductAction";
 import { setFavoriteProduct } from "./Redux/Slice/UserProductInfo";
 import Navbar from "./Component/Navbar/Navbar";
+import Search from "./Pages/Search/Search";
 
 const App: React.FC = () => {
   const { isSignedIn } = useSelector(
@@ -52,7 +53,8 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={isSignedIn ? <Home/> : <Navigate to="/Auth" replace />}/>
           <Route path="/Auth" element={isSignedIn ? <Navigate to="/" replace /> : <Auth />} />
-          {/* <Route path="*" element={<Navigate to={isSignedIn ? "/" : "/Auth"} replace />} /> */}
+          <Route path="/Search" element={isSignedIn ? <Search /> : <Navigate to="/Auth" replace />} />
+          <Route path="*" element={<Navigate to={isSignedIn ? "/" : "/Auth"} replace />} />
         </Routes>
       </HashRouter>
     </div>
