@@ -50,6 +50,7 @@ const ProductItems: React.FC<IProductItems> = () => {
           {productArr.map((item) => (
             <ProductPresentation
               details={item}
+              key={item.id*Math.random()*1000}
             />
           ))}
         </div>

@@ -7,11 +7,11 @@ import ProductItemDetailPresentation from "../ProductItemDetailPresentation/Prod
 import useUserProductAction from "../../Services/Hooks/useUserProductAction";
 import { useDispatch, useSelector } from "react-redux";
 import type UserProductsInfoInterface from "../../Interface/Redux/UserProductsInfoInterface";
-import { setFavoriteProduct } from "../../Redux/Slice/UserProductInfo";
+import { setCardProduct, setFavoriteProduct } from "../../Redux/Slice/UserProductInfo";
 
 const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
   const { Name, ImageURLs, Price, Description } = details;
-
+  const [cardQuantity , setCardQuantity] = useState<number>(0);
   const [messageAPI, contextHandler] = message.useMessage();
   const [open, setOpen] = useState<boolean>(false);
 
@@ -23,7 +23,6 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-
   const handleAddToFavorite = async () => {
     const response = await addFavorite(details.id);
     if (response) {
@@ -33,7 +32,6 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
       messageAPI.error("Failed to add to favorites.");
     }
   };
-
   const handleDeleteFavorite = async () => {
     const response = await deleteFavorite(details.id);
     const updateFavoriteProduct = FavoriteProduct.filter(
@@ -46,8 +44,6 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
       messageAPI.error("Failed to remove from favorites.");
     }
   };
-
-  // ✅ price calc for discount
   const discountedPrice = useMemo(() => {
     if (!details?.IsDiscounted) return Price;
 
@@ -59,7 +55,23 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
 
     return Math.round(base - base * (pct / 100));
   }, [details?.IsDiscounted, details?.DiscountPercentage, Price]);
-
+  const addProductToCard = () => {
+    dispatch(setCardProduct({
+      type : "add",
+      productDetails : details
+    }));
+    setCardQuantity((prev:number) => prev + 1);
+  }
+  const removeProductFromCard = () => {
+    console.log("remove from card");
+    dispatch(setCardProduct({
+      type : "remove",
+      productDetails : details
+    }));
+    setCardProduct((prev:number) => prev - 1);
+    console.log("card quantity before update : " , cardQuantity);
+  }
+  console.log("card quantity : " , cardQuantity);
 
   return (
     <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
@@ -93,9 +105,7 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
           ))}
         </Swiper>
 
-        {/* ✅ Top-left badges container (no overlap) */}
         <div className="absolute left-3 top-3 z-10 flex items-center gap-2">
-          {/* Favorite */}
           {FavoriteProduct.includes(details?.id || 0) ? (
             <button
               type="button"
@@ -116,7 +126,6 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
             </button>
           )}
 
-          {/* Best Seller */}
           {details?.IsBestSeller && (
             <div className="group relative">
               <div className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-500 text-white shadow-lg ring-1 ring-black/10 backdrop-blur transition-transform duration-200 group-hover:scale-105">
@@ -129,7 +138,6 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
             </div>
           )}
 
-          {/* Discount */}
           {details?.IsDiscounted && (
             <div className="group relative">
               <div className="inline-flex h-9 items-center justify-center rounded-full bg-emerald-500 px-3 text-xs font-bold text-white shadow-lg ring-1 ring-black/10 backdrop-blur transition-transform duration-200 group-hover:scale-105">
@@ -143,13 +151,11 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
           )}
         </div>
 
-        {/* Price badge on image (show discounted if applicable) */}
         <div className="absolute right-3 top-3 rounded-full bg-black/80 px-3 py-1 text-xs font-semibold text-white">
           ₹{details?.IsDiscounted ? discountedPrice : Price}
         </div>
       </div>
 
-      {/* Details */}
       <div className="space-y-2 p-4">
         <p className="line-clamp-1 text-base font-semibold text-gray-900">
           {Name}
@@ -157,7 +163,6 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
         <p className="line-clamp-2 text-sm text-gray-600">{Description}</p>
 
         <div className="flex items-center justify-between pt-2">
-          {/* ✅ Price section (show strike-through original price when discounted) */}
           {details?.IsDiscounted ? (
             <div className="flex items-end gap-2">
               <p className="text-lg font-bold text-gray-900">
@@ -172,13 +177,13 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
           )}
 
           <div className="flex items-center gap-2">
-            <Button className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 p-0 text-sm text-gray-700 hover:bg-gray-100">
+            <Button onClick={removeProductFromCard} className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 p-0 text-sm text-gray-700 hover:bg-gray-100">
               <i className="bi bi-dash" />
             </Button>
 
-            <p className="text-gray-700">0</p>
+            <p className="text-gray-700">{cardQuantity === 0 ? "0" : cardQuantity }</p>
 
-            <Button className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 p-0 text-sm text-gray-700 hover:bg-gray-100">
+            <Button onClick={addProductToCard} className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 p-0 text-sm text-gray-700 hover:bg-gray-100">
               <i className="bi bi-plus" />
             </Button>
           </div>
