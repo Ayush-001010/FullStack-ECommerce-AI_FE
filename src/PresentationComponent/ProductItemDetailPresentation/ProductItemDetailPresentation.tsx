@@ -89,7 +89,7 @@ const ProductItemDetailPresentation: React.FC<IProductItemDetailPresentation> = 
               autoplay={{ delay: 10000, disableOnInteraction: false }}
               className="h-[320px] w-full md:h-full"
             >
-              {ImageURLs.map((url, idx) => (
+              {(ImageURLs || []).map((url, idx) => (
                 <SwiperSlide key={`${Name}-${idx}`} className="!h-full">
                   <div className="relative h-full w-full">
                     <img

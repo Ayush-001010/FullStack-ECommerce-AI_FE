@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type IProductPresentation from "./IProductPresentation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -8,12 +8,30 @@ import useUserProductAction from "../../Services/Hooks/useUserProductAction";
 import { useDispatch, useSelector } from "react-redux";
 import type UserProductsInfoInterface from "../../Interface/Redux/UserProductsInfoInterface";
 import { setCardProduct, setFavoriteProduct } from "../../Redux/Slice/UserProductInfo";
+import useCommonAction from "../../Services/Hooks/useCommonAction";
+import type ProductInterface from "../../Interface/ProductInterface";
 
 const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
-  const { Name, ImageURLs, Price, Description } = details;
+  const { Name, Price, Description } = details;
+  const [data , setData] = useState<ProductInterface >({
+    id: details.id,
+    Description : details.Description,
+    DiscountPercentage : details.DiscountPercentage,
+    ImageURLs : details.ImageURLs,
+    IsBestSeller : details.IsBestSeller,
+    IsDiscounted : details.IsDiscounted,
+    Name : details.Name,
+    NoOfRatings : details.NoOfRatings,
+    Price : details.Price,
+    Rating : details.Rating,
+    Quantity : details.Quantity,
+    categoryId : details.categoryId,
+    ImageKey : details.ImageKey
+  });
   const [cardQuantity , setCardQuantity] = useState<number>(0);
   const [messageAPI, contextHandler] = message.useMessage();
   const [open, setOpen] = useState<boolean>(false);
+  const {getImage} = useCommonAction();
 
   const { addFavorite, deleteFavorite } = useUserProductAction();
   const { FavoriteProduct } = useSelector(
@@ -24,18 +42,18 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
   const handleAddToFavorite = async () => {
-    const response = await addFavorite(details.id);
+    const response = await addFavorite(data.id);
     if (response) {
       messageAPI.success("Added to favorites!");
-      dispatch(setFavoriteProduct([...FavoriteProduct, details.id]));
+      dispatch(setFavoriteProduct([...FavoriteProduct, data.id]));
     } else {
       messageAPI.error("Failed to add to favorites.");
     }
   };
   const handleDeleteFavorite = async () => {
-    const response = await deleteFavorite(details.id);
+    const response = await deleteFavorite(data.id);
     const updateFavoriteProduct = FavoriteProduct.filter(
-      (id) => id !== details.id
+      (id) => id !== data.id
     );
     if (response) {
       dispatch(setFavoriteProduct(updateFavoriteProduct));
@@ -71,7 +89,38 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
     setCardProduct((prev:number) => prev - 1);
     console.log("card quantity before update : " , cardQuantity);
   }
-  console.log("card quantity : " , cardQuantity);
+  const genrateImage = async (ImageKey : string) => {
+    console.log("Generating image for key : " , ImageKey);
+    const arr  : any= [];
+    for(const key of ImageKey.split("|")){
+      const res = await getImage(key);
+      if(res){
+        arr.push(res);
+      }
+    }
+    return arr;
+  }
+  useEffect(()=>{
+    const {ImageURLs , ImageKey} = details;
+    if(!ImageURLs || ImageURLs.length === 0){
+      console.log("Generating image for product id : " , details.id);
+      if(ImageKey){
+        // Generate a URL for the image using the ImageKey
+        genrateImage(ImageKey).then((urls) => {
+          console.log("Generated URLs : " , urls);
+          setData({
+            ...details,
+            ImageURLs : urls
+          });
+        });
+      } else {
+        setData(details);
+      }
+    } else {
+        setData(details);
+    }
+  },[details])
+  console.log("card quantity : " , details);
 
   return (
     <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
@@ -88,7 +137,7 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
           autoplay={{ delay: 10000, disableOnInteraction: false }}
           className="h-64 w-full"
         >
-          {ImageURLs.map((url, idx) => (
+          {(data.ImageURLs || []).map((url, idx) => (
             <SwiperSlide key={`${Name}-${idx}`} className="h-64">
               <div
                 role="button"
@@ -126,7 +175,7 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
             </button>
           )}
 
-          {details?.IsBestSeller && (
+          {data?.IsBestSeller && (
             <div className="group relative">
               <div className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-500 text-white shadow-lg ring-1 ring-black/10 backdrop-blur transition-transform duration-200 group-hover:scale-105">
                 <i className="bi bi-star-fill text-[14px]" />
@@ -138,10 +187,10 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
             </div>
           )}
 
-          {details?.IsDiscounted && (
+          {data?.IsDiscounted && (
             <div className="group relative">
               <div className="inline-flex h-9 items-center justify-center rounded-full bg-emerald-500 px-3 text-xs font-bold text-white shadow-lg ring-1 ring-black/10 backdrop-blur transition-transform duration-200 group-hover:scale-105">
-                -{details?.DiscountPercentage}%
+                -{data?.DiscountPercentage}%
               </div>
 
               <div className="pointer-events-none absolute left-1/2 top-11 -translate-x-1/2 whitespace-nowrap rounded-full bg-black/80 px-3 py-1 text-[11px] font-semibold text-white opacity-0 shadow-md transition-opacity duration-200 group-hover:opacity-100">
@@ -152,7 +201,7 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
         </div>
 
         <div className="absolute right-3 top-3 rounded-full bg-black/80 px-3 py-1 text-xs font-semibold text-white">
-          ₹{details?.IsDiscounted ? discountedPrice : Price}
+          ₹{data?.IsDiscounted ? discountedPrice : Price}
         </div>
       </div>
 
@@ -163,7 +212,7 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
         <p className="line-clamp-2 text-sm text-gray-600">{Description}</p>
 
         <div className="flex items-center justify-between pt-2">
-          {details?.IsDiscounted ? (
+          {data?.IsDiscounted ? (
             <div className="flex items-end gap-2">
               <p className="text-lg font-bold text-gray-900">
                 ₹{discountedPrice}
@@ -199,4 +248,4 @@ const ProductPresentation: React.FC<IProductPresentation> = ({ details }) => {
   );
 };
 
-export default React.memo(ProductPresentation);
+export default ProductPresentation;

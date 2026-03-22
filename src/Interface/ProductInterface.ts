@@ -2,7 +2,7 @@ export default interface ProductInterface {
     id:number;
     Description : string;
     DiscountPercentage : number;
-    ImageURLs : Array<string>;
+    ImageURLs ?: Array<string>;
     IsBestSeller : boolean;
     IsDiscounted : boolean;
     Name : string;
@@ -11,4 +11,5 @@ export default interface ProductInterface {
     Rating : number;
     Quantity : number;
     categoryId : number;
+    ImageKey : string;
 }

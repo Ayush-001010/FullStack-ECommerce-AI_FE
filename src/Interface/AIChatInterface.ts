@@ -5,4 +5,6 @@ export default interface AIChatInterface {
   userResponse: string | null;
   AskQuestionType: "Text" | null;
   type : "user" | "ai";
+  FinalOuptut: string | null;
+  ToolResponse : Array<any> | null;
 }
