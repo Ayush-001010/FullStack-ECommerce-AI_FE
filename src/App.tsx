@@ -15,6 +15,8 @@ import ChatBoxIcon from "./Component/ChatBoxFeature/ChatBoxIcon";
 import ChatBox from "./Component/ChatBoxFeature/ChatBox/ChatBox";
 import useAddToCardAction from "./Services/Hooks/useAddToCardAction";
 import Cart from "./Pages/Cart/Cart";
+import OrderConfirmation from "./Pages/OrderConfirmation/OrderConfirmation";
+import YourOrdersPage from "./Pages/YourOrder/YourOrder";
 
 const App: React.FC = () => {
   const { isSignedIn } = useSelector(
@@ -22,7 +24,7 @@ const App: React.FC = () => {
   );
   const [openChatBox, setOpenChatBox] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { getFavorites } = useUserProductAction();
+  const { getFavorites } : any = useUserProductAction();
   const { getCardProductsFromDB } = useAddToCardAction();
 
   const checkUserIsSignedInOrNot = async () => {
@@ -49,10 +51,10 @@ const App: React.FC = () => {
   useEffect(() => {
     if (isSignedIn) {
       getFavorites()
-        .then((favorites) => {
+        .then((favorites : any) => {
           dispatch(setFavoriteProduct(favorites));
         })
-        .catch((err) => {
+        .catch((err : any) => {
           console.error("Error fetching favorites:", err);
         });
     }
@@ -93,6 +95,8 @@ const App: React.FC = () => {
                 }
               />
               <Route path="/Cart" element={isSignedIn ? <Cart/> :  <Navigate to="/Auth" replace />} />
+              <Route path="/order-confirmation" element={isSignedIn ? <OrderConfirmation /> : <Navigate to="/Auth" replace/>} />
+              <Route path="/YourOrder" element={isSignedIn ? <YourOrdersPage /> : <Navigate to="/Auth" replace/>} />
               <Route
                 path="*"
                 element={<Navigate to={isSignedIn ? "/" : "/Auth"} replace />}

@@ -6,6 +6,8 @@ import OrderSummary from "../../Component/OrderSummary/OrderSummary";
 import Coupon from "../../Component/OrderSummary/Coupon/Coupon";
 import { motion } from "motion/react";
 import type { Variants } from "motion/react";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const getDiscountedUnitPrice = (
   price: number,
@@ -22,9 +24,11 @@ const getDiscountedUnitPrice = (
 };
 
 const Cart: React.FC<ICart> = () => {
-  const { cartItems } = useCartAction();
+  const { cartItems , placeOrder } = useCartAction();
   const [couponCode, setCouponCode] = useState("");
   const [couponDiscount, setCouponDiscount] = useState(0);
+  const [messageAPI , contextHandler] = message.useMessage();
+  const navigate = useNavigate();
 
   const subtotal = useMemo(() => {
     return (cartItems || []).reduce((sum: number, item: any) => {
@@ -56,7 +60,7 @@ const Cart: React.FC<ICart> = () => {
     else setCouponDiscount(0);
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     console.log("Checkout clicked", {
       subtotal,
       couponDiscount: safeCouponDiscount,
@@ -64,6 +68,15 @@ const Cart: React.FC<ICart> = () => {
       tax,
       couponCode,
     });
+    messageAPI.destroy();
+    messageAPI.loading({content: "Placing your order...", key: "checkout" , duration: 0});
+    const response = await placeOrder();
+    messageAPI.destroy();
+    if(response.success){
+      navigate("/order-confirmation");
+    } else {
+      messageAPI.error({content: "Failed to place order. Please try again.", key: "checkout"});
+    }
   };
 
   const pageVariants: Variants = {
@@ -86,6 +99,7 @@ const Cart: React.FC<ICart> = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100/60">
+      {contextHandler}
       {/* subtle background glow */}
       <div className="pointer-events-none fixed left-1/2 top-20 h-72 w-[900px] -translate-x-1/2 rounded-full bg-blue-200/30 blur-3xl" />
 

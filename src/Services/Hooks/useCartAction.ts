@@ -12,6 +12,16 @@ const useCartAction = () => {
         const response = await APICallingServices.getRequest("/product/getCartProducts?userEmail="+email+"&inFullDetails=true");
         return response;
     },[]);
+    const placeOrder = async () => {
+        const response = await APICallingServices.postRequest("/product/orderProducts",{
+            userEmail: email,
+            products : cartItems.map((item) => ({
+                productId: item.productId,
+                quantity: item.quantity
+            }))
+        });
+        return response;
+    };
     
     useEffect(() => {
         getCartDetails().then((response) => {
@@ -22,7 +32,7 @@ const useCartAction = () => {
         });
     }, []);
 
-    return { cartItems };
+    return { cartItems , placeOrder};
 }
 
 export default useCartAction;

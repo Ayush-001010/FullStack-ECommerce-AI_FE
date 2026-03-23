@@ -31,7 +31,7 @@ const Navbar: React.FC<INavbar> = () => {
 
         <nav className="flex items-center gap-2">
           <Link
-            to="/orders"
+            to="/YourOrder"
             className="group inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white/90 shadow-sm transition hover:bg-white/10 hover:text-white active:scale-[0.98]"
             title="Your orders"
           >
