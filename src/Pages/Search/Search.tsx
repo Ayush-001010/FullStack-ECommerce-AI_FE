@@ -6,7 +6,6 @@ import type ProductInterface from "../../Interface/ProductInterface";
 
 const Search: React.FC<ISearch> = () => {
   const { data } = useSearchAction();
-  console.log("Search data in component:", data);
 
   return (
     <div>

@@ -4,7 +4,6 @@ import type IChatBoxIcon from "./IChatBoxIcon";
 const ChatBoxIcon: React.FC<IChatBoxIcon> = ({openChatBoxHandler }) => {
 
   const handleOpenChatBox = () => {
-    console.log("Chat box icon clicked");
     openChatBoxHandler();
   } 
 

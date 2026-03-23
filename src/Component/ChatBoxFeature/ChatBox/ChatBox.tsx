@@ -17,7 +17,6 @@ const ChatBox: React.FC<IChatBox> = () => {
 
   const closeWelcomeTextHandler = async (value: string) => {
     setOpenWelcomeText(false);
-    console.log("Welcome text closed with value:", value);
     const newChat: AIChatInterface = {
       intent: null,
       missing_fields: null,
@@ -36,7 +35,6 @@ const ChatBox: React.FC<IChatBox> = () => {
     setChats((prev) => [...prev, newChat]);
     const response = await callAI(value, chats);
     messageAPI.destroy();
-    console.log("Response from AI API:", response);
     if (response.success) {
       const { data } = response;
       const value = data[0];
@@ -88,7 +86,6 @@ const ChatBox: React.FC<IChatBox> = () => {
     setValue("");
     const response = await callAI(value, chats);
     messageAPI.destroy();
-    console.log("Response from AI API:", response);
     if (response.success) {
       const { data } = response;
       const value = data[0];
@@ -111,11 +108,9 @@ const ChatBox: React.FC<IChatBox> = () => {
     }
   };
   useEffect(() => {
-    console.log("Chats updated:", chats);
     if (chats.length > 1) {
       const lastChat = chats[chats.length - 1];
       if (lastChat.type === "ai") {
-        console.log("Last chat is from AI:", lastChat);
         if (lastChat.AskQuestionType === "Text") {
           setDisableInput(false);
         }

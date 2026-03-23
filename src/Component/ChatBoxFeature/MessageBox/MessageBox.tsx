@@ -86,11 +86,9 @@ const MessageBox: React.FC<IMessageBox> = ({ chats }) => {
             const text =
               (isUser ? chat.userResponse : chat.assistant_question) || "";
             const { FinalOuptut, ToolResponse } = chat;
-            console.log("ToolResponse:", chat);
             
             if (FinalOuptut) {
               const items = Array.isArray(ToolResponse) ? ToolResponse : [];
-              console.log("Items to display:", items);
             
               return (
                 <motion.div

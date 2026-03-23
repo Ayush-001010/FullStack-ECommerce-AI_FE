@@ -15,7 +15,6 @@ const useAIChatBox = () => {
       FinalOuptut: null,
       ToolResponse: null,
     };
-    console.log("New chat object created:", newChat);
     const response = await AI_APICallingServices.postChatRequest([newChat]);
     return response;
   };

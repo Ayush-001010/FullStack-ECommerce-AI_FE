@@ -21,7 +21,6 @@ const useUserProductAction = () => {
     }
     const searchProducts = async (query : string) => {
         const response = await APICallingServices.postRequest("/product/searchProduct",{searchText : query});
-        console.log(response);
         return response.data || [];
     }
 

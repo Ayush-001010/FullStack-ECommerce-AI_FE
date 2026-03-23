@@ -47,6 +47,9 @@ const UserProductsInfoSlice  = createSlice({
                     }).filter((product) => product.quantity > 0);
                 }
             }
+        },
+        setInitialCardProduct : (state , action) => {
+            state.CardProducts = [];
         }
     }
 });

@@ -32,7 +32,6 @@ const WelcomeText: React.FC<IWelcomeText> = ({closeWelcomeTextHandler}) => {
   };
 
   const openShowButtonHandler = () => {
-    console.log("Animation completed, showing button...");
     setShowButton(true);
   };
 

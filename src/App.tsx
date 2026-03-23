@@ -13,6 +13,8 @@ import Navbar from "./Component/Navbar/Navbar";
 import Search from "./Pages/Search/Search";
 import ChatBoxIcon from "./Component/ChatBoxFeature/ChatBoxIcon";
 import ChatBox from "./Component/ChatBoxFeature/ChatBox/ChatBox";
+import useAddToCardAction from "./Services/Hooks/useAddToCardAction";
+import Cart from "./Pages/Cart/Cart";
 
 const App: React.FC = () => {
   const { isSignedIn } = useSelector(
@@ -21,6 +23,7 @@ const App: React.FC = () => {
   const [openChatBox, setOpenChatBox] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { getFavorites } = useUserProductAction();
+  const { getCardProductsFromDB } = useAddToCardAction();
 
   const checkUserIsSignedInOrNot = async () => {
     const res = await APICallingServices.postRequest("/auth/check", {});
@@ -35,7 +38,6 @@ const App: React.FC = () => {
     }
   };
   const openChatBoxHandler = () => {
-    console.log("Chat box icon clicked");
     setOpenChatBox(true);
   };
 
@@ -48,7 +50,6 @@ const App: React.FC = () => {
     if (isSignedIn) {
       getFavorites()
         .then((favorites) => {
-          console.log("User's favorite products:", favorites);
           dispatch(setFavoriteProduct(favorites));
         })
         .catch((err) => {
@@ -56,6 +57,18 @@ const App: React.FC = () => {
         });
     }
   }, [isSignedIn]);
+  useEffect(() => {
+    if (isSignedIn) {
+      getCardProductsFromDB()
+        .then((cardProducts) => {
+          console.log("Card Products from DB:", cardProducts);
+        })
+        .catch((err) => {
+          console.error("Error fetching card products:", err);
+        });
+    }
+  }, [isSignedIn]);
+
   return (
     <div className="App">
       <HashRouter>
@@ -63,14 +76,33 @@ const App: React.FC = () => {
           <div className="flex min-w-0 flex-1 flex-col">
             {isSignedIn && <Navbar />}
             <Routes>
-              <Route path="/" element={isSignedIn ? <Home /> : <Navigate to="/Auth" replace />} />
-              <Route path="/Auth" element={isSignedIn ? <Navigate to="/" replace /> : <Auth />} />
-              <Route path="/Search" element={isSignedIn ? <Search /> : <Navigate to="/Auth" replace />} />
-              <Route path="*" element={<Navigate to={isSignedIn ? "/" : "/Auth"} replace />} />
+              <Route
+                path="/"
+                element={
+                  isSignedIn ? <Home /> : <Navigate to="/Auth" replace />
+                }
+              />
+              <Route
+                path="/Auth"
+                element={isSignedIn ? <Navigate to="/" replace /> : <Auth />}
+              />
+              <Route
+                path="/Search"
+                element={
+                  isSignedIn ? <Search /> : <Navigate to="/Auth" replace />
+                }
+              />
+              <Route path="/Cart" element={isSignedIn ? <Cart/> :  <Navigate to="/Auth" replace />} />
+              <Route
+                path="*"
+                element={<Navigate to={isSignedIn ? "/" : "/Auth"} replace />}
+              />
             </Routes>
-            {(isSignedIn && !openChatBox) && <ChatBoxIcon  openChatBoxHandler={openChatBoxHandler} />}
+            {isSignedIn && !openChatBox && (
+              <ChatBoxIcon openChatBoxHandler={openChatBoxHandler} />
+            )}
           </div>
-          {(isSignedIn && openChatBox) && (
+          {isSignedIn && openChatBox && (
             <div className="w-[400px] border-l border-gray-200 bg-white">
               <ChatBox />
             </div>

@@ -7,9 +7,7 @@ const useProductAction = () => {
 
     const getProducts = async (pageNo : number = 1) => {
         try {
-            console.log(`Fetching products for page ${pageNo}...`);
             const response = await APICallingServices.postRequest("/product/getDetails" , { pageNo });
-            console.log('Products fetched successfully:', response);
             if(pageNo === 1){
                 setProductArr(response.data || []);
             } else {

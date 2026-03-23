@@ -7,7 +7,6 @@ export default class AI_APICallingServices {
     static readonly postChatRequest = async (chat : Array<AIChatInterface>) => {
         try {
             const response = await this.api.post("/chat", chat);
-            console.log("Response from POST request:", response.data);
             return { success : response.data.success, data: response.data.data.response };
         } catch (error) {
             console.error("Error in POST request:", error);
