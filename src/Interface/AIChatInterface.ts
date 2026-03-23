@@ -7,4 +7,6 @@ export default interface AIChatInterface {
   type : "user" | "ai";
   FinalOuptut: string | null;
   ToolResponse : Array<any> | null;
+  SubCategory:Array<string> | null;
+  Category:Array<string> | null;
 }

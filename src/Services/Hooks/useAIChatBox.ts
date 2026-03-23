@@ -14,6 +14,8 @@ const useAIChatBox = () => {
       type: "user",
       FinalOuptut: null,
       ToolResponse: null,
+      SubCategory: chats.length > 0 ? chats[chats.length - 1].SubCategory : null,
+      Category: chats.length > 0 ? chats[chats.length - 1].Category : null,
     };
     const response = await AI_APICallingServices.postChatRequest([newChat]);
     return response;

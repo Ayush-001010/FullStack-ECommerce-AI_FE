@@ -12,6 +12,7 @@ export default interface ProductInterface {
   Quantity: number;
   categoryId: number;
   ImageKey: string;
+  SubCategory: string;
 }
 
 export interface CartProductInterface {

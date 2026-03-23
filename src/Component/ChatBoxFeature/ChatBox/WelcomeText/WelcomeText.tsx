@@ -72,7 +72,7 @@ const WelcomeText: React.FC<IWelcomeText> = ({closeWelcomeTextHandler}) => {
         ))}
       </motion.p>
       {showButton && (
-        <motion.div>
+        <motion.div className="flex flex-col items-center justify-center">
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -81,6 +81,15 @@ const WelcomeText: React.FC<IWelcomeText> = ({closeWelcomeTextHandler}) => {
             onClick={() => closeWelcomeTextHandler("Explore products on discount now!")}
           >
             Explore products on discount now!
+          </motion.button>
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="mt-6 px-6 py-2 bg-[#c3baba] text-white rounded-lg shadow-md hover:bg-[#b2b2b2] cursor-pointer transition-colors duration-300"
+            onClick={() => closeWelcomeTextHandler("Let’s find the best product for you!")}
+          >
+            Let’s find the best product for you!
           </motion.button>
         </motion.div>
       )}

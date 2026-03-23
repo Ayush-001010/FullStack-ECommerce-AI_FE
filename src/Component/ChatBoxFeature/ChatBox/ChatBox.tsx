@@ -26,6 +26,8 @@ const ChatBox: React.FC<IChatBox> = () => {
       type: "user",
       FinalOuptut: null,
       ToolResponse: null,
+      SubCategory: null,
+      Category: null,
     };
     messageAPI.loading({
       content: "Processing your request...",
@@ -47,6 +49,8 @@ const ChatBox: React.FC<IChatBox> = () => {
         type: "ai",
         FinalOuptut: value.FinalOuptut || null,
         ToolResponse: value.ToolResponse || null,
+        SubCategory: value.SubCategory || null,
+        Category: value.Category || null,
       };
       setChats((prev) => [...prev, newChat]);
     } else {
@@ -76,6 +80,8 @@ const ChatBox: React.FC<IChatBox> = () => {
       type: "user",
       FinalOuptut: null,
       ToolResponse: null,
+      SubCategory: null,
+      Category: null,
     };
     messageAPI.loading({
       content: "Processing your request...",
@@ -98,6 +104,8 @@ const ChatBox: React.FC<IChatBox> = () => {
         type: "ai",
         FinalOuptut: value.FinalOuptut || null,
         ToolResponse: value.ToolResponse || null,
+        SubCategory: value.SubCategory || null,
+        Category: value.Category || null,
       };
       setChats((prev) => [...prev, newChat]);
     } else {
@@ -153,6 +161,7 @@ const ChatBox: React.FC<IChatBox> = () => {
             <input
               type="text"
               disabled={disableInput}
+              value={value}
               placeholder="Search discounted products..."
               className={[
                 "h-10 flex-1 bg-transparent px-2 text-sm text-slate-900 outline-none",
